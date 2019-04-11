@@ -331,7 +331,7 @@ namespace Client
 
         private int PlayerConnectedTime { get; } = GetGameTimer();
         private bool IsFastSchedule { get; set; } = true;
-        private bool IsFirstTimeCalled { get; set } = true;
+        private bool IsFirstTimeCalled { get; set; } = true;
         private async Task ScheduleMissionAsync()
         {
             // 延迟第一次调用
