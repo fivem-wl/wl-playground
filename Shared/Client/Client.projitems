@@ -9,7 +9,6 @@
     <Import_RootNamespace>Client</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)CarSpawner.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FatalDamageEvents.cs" />
   </ItemGroup>
 </Project>

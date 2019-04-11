@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
 
-namespace Client
+namespace youkatei
 {
     public class CarSpawner : BaseScript
     {
@@ -14,7 +14,7 @@ namespace Client
         }
 
         private Vehicle previousCar = null;
-        
+
         // 如果上一辆车还存在
         // 被玩家拥有
         // 删除
@@ -24,9 +24,9 @@ namespace Client
             {
                 if (previousCar.Exists() && previousCar.PreviouslyOwnedByPlayer)
                 {
-                        previousCar.PreviouslyOwnedByPlayer = false;
-                        SetEntityAsMissionEntity(previousCar.Handle, true, true);
-                        previousCar.Delete();
+                    previousCar.PreviouslyOwnedByPlayer = false;
+                    SetEntityAsMissionEntity(previousCar.Handle, true, true);
+                    previousCar.Delete();
                 }
                 previousCar = null;
             }
@@ -160,12 +160,12 @@ namespace Client
                     else if (args[0].ToString() == "-sa")
                     {
                         model = "Turismo2";
-                    }   
+                    }
                 }
 
                 // 删除上辆车
                 removePreviousCar();
-                
+
                 // 刷车
                 await spawnCar(model);
 
