@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
 
@@ -12,8 +13,64 @@ namespace Client
             EventHandlers["onClientResourceStart"] += new Action<string>(OnClientResourceStart);
         }
 
+        private Vehicle previousCar = null;
+        
+        // 如果上一辆车还存在
+        // 被玩家拥有
+        // 删除
+        private void removePreviousCar()
+        {
+            if (previousCar != null)
+            {
+                if (previousCar.Exists() && previousCar.PreviouslyOwnedByPlayer)
+                {
+                        previousCar.PreviouslyOwnedByPlayer = false;
+                        SetEntityAsMissionEntity(previousCar.Handle, true, true);
+                        previousCar.Delete();
+                }
+                previousCar = null;
+            }
+        }
+
+        // 刷车
+        private async Task spawnCar(String model)
+        {
+            // 检查模型存在与否
+            // assumes the directive `using static CitizenFX.Core.Native.API;`
+            var hash = (uint)GetHashKey(model);
+            if (!IsModelInCdimage(hash) || !IsModelAVehicle(hash))
+            {
+                TriggerEvent("chat:addMessage", new
+                {
+                    color = new[] { 255, 0, 0 },
+                    args = new[] { "[车管]", $"xiaogo, {model}不存在!" }
+                });
+                return;
+            }
+
+            // 创造车辆
+            var vehicle = await World.CreateVehicle(model, Game.PlayerPed.Position, Game.PlayerPed.Heading);
+            vehicle.PreviouslyOwnedByPlayer = true;
+            vehicle.IsPersistent = true;
+            vehicle.NeedsToBeHotwired = false;
+            vehicle.IsStolen = false;
+            vehicle.IsEngineRunning = true;
+            vehicle.PlaceOnGround();
+            previousCar = vehicle;
+
+            // 把玩家扔进车里
+            Game.PlayerPed.SetIntoVehicle(vehicle, VehicleSeat.Driver);
+
+            TriggerEvent("chat:addMessage", new
+            {
+                color = new[] { 51, 51, 255 },
+                args = new[] { "[车管]", $"{model}, ging!" }
+            });
+        }
+
         private void OnClientResourceStart(string resourceName)
         {
+
             RegisterCommand("car", new Action<int, List<object>, string>(async (source, args, raw) =>
             {
                 // 检查输入的arg
@@ -58,30 +115,12 @@ namespace Client
                     return;
                 }
 
-                // 检查模型存在与否
-                // assumes the directive `using static CitizenFX.Core.Native.API;`
-                var hash = (uint)GetHashKey(model);
-                if (!IsModelInCdimage(hash) || !IsModelAVehicle(hash))
-                {
-                    TriggerEvent("chat:addMessage", new
-                    {
-                        color = new[] { 255, 0, 0 },
-                        args = new[] { "[车管]", $"xiaogo, {model}不存在!" }
-                    });
-                    return;
-                }
+                // 删除上辆车
+                removePreviousCar();
 
-                // 创造车辆
-                var vehicle = await World.CreateVehicle(model, Game.PlayerPed.Position, Game.PlayerPed.Heading);
+                // 刷车
+                await spawnCar(model);
 
-                // 把玩家扔进车里
-                Game.PlayerPed.SetIntoVehicle(vehicle, VehicleSeat.Driver);
-
-                TriggerEvent("chat:addMessage", new
-                {
-                    color = new[] { 51, 51, 255 },
-                    args = new[] { "[车管]", $"{model}, ging!" }
-                });
             }), false);
 
             RegisterCommand("tur", new Action<int, List<object>, string>(async (source, args, raw) =>
@@ -113,30 +152,12 @@ namespace Client
                     }   
                 }
 
-                // 检查模型存在与否
-                // assumes the directive `using static CitizenFX.Core.Native.API;`
-                var hash = (uint)GetHashKey(model);
-                if (!IsModelInCdimage(hash) || !IsModelAVehicle(hash))
-                {
-                    TriggerEvent("chat:addMessage", new
-                    {
-                        color = new[] { 255, 0, 0 },
-                        args = new[] { "[车管]", $"请联系管理员关于/tur的问题，提起{model}不存在." }
-                    });
-                    return;
-                }
+                // 删除上辆车
+                removePreviousCar();
+                
+                // 刷车
+                await spawnCar(model);
 
-                // 创造车辆
-                var vehicle = await World.CreateVehicle(model, Game.PlayerPed.Position, Game.PlayerPed.Heading);
-
-                // 把玩家扔进车里
-                Game.PlayerPed.SetIntoVehicle(vehicle, VehicleSeat.Driver);
-
-                TriggerEvent("chat:addMessage", new
-                {
-                    color = new[] { 51, 51, 255 },
-                    args = new[] { "[车管]", $"{model}, ging!" }
-                });
             }), false);
         }
     }
