@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
 
-namespace Client
+namespace youkatei
 {
     public class CarSpawner : BaseScript
     {
@@ -14,7 +14,7 @@ namespace Client
         }
 
         private Vehicle previousCar = null;
-        
+
         // 如果上一辆车还存在
         // 被玩家拥有
         // 删除
@@ -24,11 +24,20 @@ namespace Client
             {
                 if (previousCar.Exists() && previousCar.PreviouslyOwnedByPlayer)
                 {
-                        previousCar.PreviouslyOwnedByPlayer = false;
-                        SetEntityAsMissionEntity(previousCar.Handle, true, true);
-                        previousCar.Delete();
+                    previousCar.PreviouslyOwnedByPlayer = false;
+                    SetEntityAsMissionEntity(previousCar.Handle, true, true);
+                    previousCar.Delete();
                 }
                 previousCar = null;
+            }
+        }
+
+        // 等待模型读取
+        private async Task waitForModelLoading(uint hash)
+        {
+            while (!HasModelLoaded(hash))
+            {
+                await Delay(0);
             }
         }
 
@@ -50,12 +59,14 @@ namespace Client
 
             // 创造车辆
             var vehicle = await World.CreateVehicle(model, Game.PlayerPed.Position, Game.PlayerPed.Heading);
+            // 等待模型读取
+            await waitForModelLoading(hash);
+
             vehicle.PreviouslyOwnedByPlayer = true;
             vehicle.IsPersistent = true;
             vehicle.NeedsToBeHotwired = false;
             vehicle.IsStolen = false;
             vehicle.IsEngineRunning = true;
-            vehicle.PlaceOnGround();
             previousCar = vehicle;
 
             // 把玩家扔进车里
@@ -63,8 +74,8 @@ namespace Client
 
             TriggerEvent("chat:addMessage", new
             {
-                color = new[] { 51, 51, 255 },
-                args = new[] { "[车管]", $"{model}, ging!" }
+                color = new[] { 255, 0, 0 },
+                args = new[] { "[车管]", $"{vehicle.DisplayName}, ging!" }
             });
         }
 
@@ -83,12 +94,12 @@ namespace Client
                     {
                         TriggerEvent("chat:addMessage", new
                         {
-                            color = new[] { 51, 51, 255 },
+                            color = new[] { 255, 0, 0 },
                             args = new[] { "[车管帮助]", $"请输入/car %车名%" }
                         });
                         TriggerEvent("chat:addMessage", new
                         {
-                            color = new[] { 51, 51, 255 },
+                            color = new[] { 255, 0, 0 },
                             args = new[] { "[车管帮助]", $"%车名%请看 https://wiki.gt-mp.net/index.php/Vehicle_Models" }
                         });
                         return;
@@ -136,12 +147,12 @@ namespace Client
                     {
                         TriggerEvent("chat:addMessage", new
                         {
-                            color = new[] { 51, 51, 255 },
+                            color = new[] { 255, 0, 0 },
                             args = new[] { "[车管帮助]", $"请输入/tur" }
                         });
                         TriggerEvent("chat:addMessage", new
                         {
-                            color = new[] { 51, 51, 255 },
+                            color = new[] { 255, 0, 0 },
                             args = new[] { "[车管帮助]", $"/tur -sa可以出生怀旧Turismo" }
                         });
                         return;
@@ -149,12 +160,49 @@ namespace Client
                     else if (args[0].ToString() == "-sa")
                     {
                         model = "Turismo2";
-                    }   
+                    }
                 }
 
                 // 删除上辆车
                 removePreviousCar();
-                
+
+                // 刷车
+                await spawnCar(model);
+
+            }), false);
+
+            RegisterCommand("inf", new Action<int, List<object>, string>(async (source, args, raw) =>
+            {
+                // 检查输入的arg
+                // -h = --help
+                // 空白默认成现代Infernus
+                // -sa则是sa的Infernus
+                var model = "Infernus";
+                if (args.Count == 1)
+                {
+                    if (args[0].ToString() == "-h")
+                    {
+                        TriggerEvent("chat:addMessage", new
+                        {
+                            color = new[] { 255, 0, 0 },
+                            args = new[] { "[车管帮助]", $"请输入/inf" }
+                        });
+                        TriggerEvent("chat:addMessage", new
+                        {
+                            color = new[] { 255, 0, 0 },
+                            args = new[] { "[车管帮助]", $"/inf -sa可以出生怀旧Infernus" }
+                        });
+                        return;
+                    }
+                    else if (args[0].ToString() == "-sa")
+                    {
+                        model = "Infernus2";
+                    }
+                }
+
+                // 删除上辆车
+                removePreviousCar();
+
                 // 刷车
                 await spawnCar(model);
 
