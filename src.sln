@@ -3,21 +3,61 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.539
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wl", "wl\wl.csproj", "{75F9F1AC-F4AD-471B-91BB-1F1B834B12EC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mission", "Mission", "{5D5A822B-AF58-42A1-8E81-D50C819AD7AA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RotK", "RotK", "{15CC7B4B-2D1E-49A4-BD79-01C636F5C9CB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Mission\RotK\Client\Client.csproj", "{33E26F87-962B-4B5D-9C1D-BA2B650C0AAC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Mission\RotK\Server\Server.csproj", "{A1E02DC0-4E3F-47A5-AC65-03D253A15485}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{C93028CC-679C-4904-B578-F0C88EE06453}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Extensions", "Shared\Extensions\Extensions.shproj", "{98B69224-2E49-46B9-8960-CD3F49A197AA}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Client", "Shared\Client\Client.shproj", "{5E7D6CFE-8610-4269-B319-525FCA971683}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Freeroam", "Freeroam", "{AEA4FADD-852E-42F3-BA8D-508620B7149B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Freeroam\Client\Client.csproj", "{19B7FF10-22FF-4D4C-9D3D-35E97313D667}"
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Shared\Client\Client.projitems*{19b7ff10-22ff-4d4c-9d3d-35e97313d667}*SharedItemsImports = 4
+		Shared\Extensions\Extensions.projitems*{19b7ff10-22ff-4d4c-9d3d-35e97313d667}*SharedItemsImports = 4
+		Shared\Client\Client.projitems*{33e26f87-962b-4b5d-9c1d-ba2b650c0aac}*SharedItemsImports = 4
+		Shared\Extensions\Extensions.projitems*{33e26f87-962b-4b5d-9c1d-ba2b650c0aac}*SharedItemsImports = 4
+		Shared\Client\Client.projitems*{5e7d6cfe-8610-4269-b319-525fca971683}*SharedItemsImports = 13
+		Shared\Extensions\Extensions.projitems*{98b69224-2e49-46b9-8960-cd3f49a197aa}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{75F9F1AC-F4AD-471B-91BB-1F1B834B12EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{75F9F1AC-F4AD-471B-91BB-1F1B834B12EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{75F9F1AC-F4AD-471B-91BB-1F1B834B12EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{75F9F1AC-F4AD-471B-91BB-1F1B834B12EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33E26F87-962B-4B5D-9C1D-BA2B650C0AAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33E26F87-962B-4B5D-9C1D-BA2B650C0AAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33E26F87-962B-4B5D-9C1D-BA2B650C0AAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33E26F87-962B-4B5D-9C1D-BA2B650C0AAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1E02DC0-4E3F-47A5-AC65-03D253A15485}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1E02DC0-4E3F-47A5-AC65-03D253A15485}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1E02DC0-4E3F-47A5-AC65-03D253A15485}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1E02DC0-4E3F-47A5-AC65-03D253A15485}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19B7FF10-22FF-4D4C-9D3D-35E97313D667}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19B7FF10-22FF-4D4C-9D3D-35E97313D667}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19B7FF10-22FF-4D4C-9D3D-35E97313D667}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19B7FF10-22FF-4D4C-9D3D-35E97313D667}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{15CC7B4B-2D1E-49A4-BD79-01C636F5C9CB} = {5D5A822B-AF58-42A1-8E81-D50C819AD7AA}
+		{33E26F87-962B-4B5D-9C1D-BA2B650C0AAC} = {15CC7B4B-2D1E-49A4-BD79-01C636F5C9CB}
+		{A1E02DC0-4E3F-47A5-AC65-03D253A15485} = {15CC7B4B-2D1E-49A4-BD79-01C636F5C9CB}
+		{98B69224-2E49-46B9-8960-CD3F49A197AA} = {C93028CC-679C-4904-B578-F0C88EE06453}
+		{5E7D6CFE-8610-4269-B319-525FCA971683} = {C93028CC-679C-4904-B578-F0C88EE06453}
+		{19B7FF10-22FF-4D4C-9D3D-35E97313D667} = {AEA4FADD-852E-42F3-BA8D-508620B7149B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E57DC6A7-7A2E-461C-830F-8C6603A19487}
