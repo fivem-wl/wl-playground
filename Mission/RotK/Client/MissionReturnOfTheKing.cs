@@ -329,9 +329,18 @@ namespace Client
             return MissionsInfo[index];
         }
 
+        private int PlayerConnectedTime { get; } = GetGameTimer();
         private bool IsFastSchedule { get; set; } = true;
+        private bool IsFirstTimeCalled { get; set } = true;
         private async Task ScheduleMissionAsync()
         {
+            // 延迟第一次调用
+            if (IsFirstTimeCalled)
+            {
+                IsFirstTimeCalled = false;
+                await Delay(1000 * 30);
+                return;
+            }
             if (IsFastSchedule || IsReachScheduleInterval)
             {
                 IsFastSchedule = false;
