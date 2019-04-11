@@ -49,17 +49,19 @@ namespace Client
     /// </summary>
     public sealed class MissionReturnOfTheKing
     {
-        public delegate void MissionStartedEvent(string title, string name, Vector3 position);
+        //public delegate void MissionStartedEvent(string title, string name, Vector3 position);
         public delegate void MissionStoppedEvent(string reason);
         public delegate void MissionObjectiveStartedEvent(
                 MissionObjective missionObjective, int objectiveIndex, bool isFirstObjective, bool isLastObjective);
         public delegate void MissionObjectiveStoppedEvent(
                 MissionObjective missionObjective, int objectiveIndex, bool isFirstObjective, bool isLastObjective, string reason);
+        public delegate void MissionScheduledEvent(string title, string name, Vector3 position);
 
-        public static event MissionStartedEvent OnMissionStart;
+        //public static event MissionStartedEvent OnMissionStart;
         public static event MissionStoppedEvent OnMissionStop;
         public static event MissionObjectiveStartedEvent OnMissionObjectiveStart;
         public static event MissionObjectiveStoppedEvent OnMissionObjectiveStop;
+        public static event MissionScheduledEvent OnMissionSchedule;
 
         public static Interval CheckInterval { get; } = 1000 * 1;
         public static bool IsScheduled { get { return CurrentMissionObjectiveIndex == 0; } }
@@ -123,14 +125,16 @@ namespace Client
 
             FatalDamageEvents.OnPlayerDead += StopMissionWhenPlayerDead;
 
-            OnMissionStart?.Invoke(MissionInfo.Identifier.Title, MissionInfo.Identifier.Name, MissionInfo.MissionObjectivesInfo[0].Location.Position);
+            OnMissionSchedule?.Invoke(MissionInfo.Identifier.Title, MissionInfo.Identifier.Name, MissionInfo.MissionObjectivesInfo[0].Location.Position);
         }
 
         public static void Stop(string reason)
         {
+            var index = CurrentMissionObjectiveIndex;
+
             StopCurrentObjective(reason);
 
-            FatalDamageEvents.OnPlayerDead -= StopMissionWhenPlayerDead;
+            if (index == 0) FatalDamageEvents.OnPlayerDead -= StopMissionWhenPlayerDead;
 
             OnMissionStop?.Invoke(reason);
         }
@@ -261,7 +265,7 @@ namespace Client
             };
 
 
-            MissionReturnOfTheKing.OnMissionStart += HintOnMissionStart;
+            MissionReturnOfTheKing.OnMissionSchedule += HintOnMissionSchedule;
 
             MissionReturnOfTheKing.OnMissionStop += HintOnMissionFinish;
             MissionReturnOfTheKing.OnMissionStop += RescheduleWhenMissionStop;
@@ -283,7 +287,7 @@ namespace Client
             await Delay(1000 * 10);
         }
 
-        private void HintOnMissionStart(string title, string name, Vector3 position)
+        private void HintOnMissionSchedule(string title, string name, Vector3 position)
         {
             SetNotificationTextEntry("CELL_EMAIL_BCON");
             foreach (string s in Screen.StringToArray(
@@ -325,9 +329,18 @@ namespace Client
             return MissionsInfo[index];
         }
 
+        private int PlayerConnectedTime { get; } = GetGameTimer();
         private bool IsFastSchedule { get; set; } = true;
+        private bool IsFirstTimeCalled { get; set; } = true;
         private async Task ScheduleMissionAsync()
         {
+            // 延迟第一次调用
+            if (IsFirstTimeCalled)
+            {
+                IsFirstTimeCalled = false;
+                await Delay(1000 * 30);
+                return;
+            }
             if (IsFastSchedule || IsReachScheduleInterval)
             {
                 IsFastSchedule = false;
