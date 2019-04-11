@@ -9,7 +9,7 @@ namespace Client
     {
         public CarSpawner()
         {
-            EventHandlers["onClientResourceStart"] += new Action<string>(OnClientResourceStart));
+            EventHandlers["onClientResourceStart"] += new Action<string>(OnClientResourceStart);
         }
 
         private void OnClientResourceStart(string resourceName)
