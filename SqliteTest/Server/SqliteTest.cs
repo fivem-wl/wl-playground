@@ -15,6 +15,7 @@ using static CitizenFX.Core.Native.API;
 namespace Server
 {
 
+    // 传送点表
     public class TeleportLocations
     {
         [AutoIncrement]
@@ -48,6 +49,7 @@ namespace Server
         public DateTime LastUsedTime { get; set; }
     }
 
+    // 玩家信息表
     public class Player
     {
         [PrimaryKey]
@@ -57,6 +59,7 @@ namespace Server
     public class SqliteTest : BaseScript
     {
         private const string DbFilePath = "wl/SqliteTest.db";
+        // 创建数据库连接Factory
         private OrmLiteConnectionFactory dbFactory = new OrmLiteConnectionFactory($"{DbFilePath}", SqliteDialect.Provider);
         //private OrmLiteConnectionFactory dbFactory = new OrmLiteConnectionFactory(":memory:", SqliteDialect.Provider);
 
@@ -65,11 +68,14 @@ namespace Server
 
             Debug.WriteLine("TEst");
 
+            // 建立数据库连接
             using (var db = dbFactory.Open())
             {
+                // 创建表
                 db.CreateTableIfNotExists<Player>();
                 db.CreateTableIfNotExists<TeleportLocations>();
 
+                // 写入数据库
                 var creator = new Player { Id = GetGameTimer().ToString() };
                 db.Insert(creator);
                 db.Insert(new TeleportLocations
@@ -85,11 +91,13 @@ namespace Server
 
             RegisterCommand("SqliteTest", new Action<int, List<object>, string>((source, args, raw) =>
             {
+                // 建立数据库连接
                 using (var db = dbFactory.Open())
                 {
                     db.CreateTableIfNotExists<Player>();
                     db.CreateTableIfNotExists<TeleportLocations>();
 
+                    // 写入数据
                     var creator = new Player { Id = GetGameTimer().ToString() };
                     db.Insert(creator);
                     db.Insert(new TeleportLocations
