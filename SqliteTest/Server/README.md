@@ -1,4 +1,6 @@
-﻿
+
+SQL使用示例, 如果有与数据库交互的需求, 建议使用ServiceStack.OrmLite(.SqlLite)包
+ 
 More SQL usage - Please refer to: https://github.com/ServiceStack/ServiceStack.OrmLite
 
 Test Result Sample Data:
