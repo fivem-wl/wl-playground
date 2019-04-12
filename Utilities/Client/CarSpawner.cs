@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
 
-namespace youkatei
+namespace Client
 {
     public class CarSpawner : BaseScript
     {
@@ -65,39 +65,39 @@ namespace youkatei
             TriggerEvent("chat:addMessage", new
             {
                 color = new[] { 0, 128, 255 },
-                args = new[] { "[车管]", $"{vehicle.DisplayName}, ging!" }
+                args = new[] { "[车管]", $"把你扔进了{vehicle.DisplayName}" }
             });
         }
 
         private void OnClientResourceStart(string resourceName)
         {
-          RegisterCommand("car", new Action<int, List<object>, string>(async (source, args, raw) =>
-                {
+            RegisterCommand("car", new Action<int, List<object>, string>(async (source, args, raw) =>
+            {
                 // 检查输入的arg
                 // 没输入或者多输入了，弹错
                 var model = " ";
-                    if (args.Count == 1)
+                if (args.Count == 1)
+                {
+                    model = args[0].ToString();
+                }
+                else if (args.Count == 0)
+                {
+                    TriggerEvent("chat:addMessage", new
                     {
-                        model = args[0].ToString();
-                    }
-                    else if (args.Count == 0)
+                        color = new[] { 255, 0, 0 },
+                        args = new[] { "[车管]", $"太北上了, 你敲的空的车名..." }
+                    });
+                    return;
+                }
+                else
+                {
+                    TriggerEvent("chat:addMessage", new
                     {
-                        TriggerEvent("chat:addMessage", new
-                        {
-                            color = new[] { 255, 0, 0 },
-                            args = new[] { "[车管]", $"太北上了, 你敲的车名都是null..." }
-                        });
-                        return;
-                    }
-                    else
-                    {
-                        TriggerEvent("chat:addMessage", new
-                        {
-                            color = new[] { 255, 0, 0 },
-                            args = new[] { "[车管]", $"太TK了, 我只接受一个车名..." }
-                        });
-                        return;
-                    }
+                        color = new[] { 255, 0, 0 },
+                        args = new[] { "[车管]", $"太TK了, 我只接受一个车名..." }
+                    });
+                    return;
+                }
 
                 // 删除上辆车
                 removePreviousCar();
@@ -105,7 +105,7 @@ namespace youkatei
                 // 刷车
                 await spawnCar(model);
 
-                }), false);
+            }), false);
 
             // 怀旧的samp类型指令
             var sampCommands = new Dictionary<string, string>();
@@ -115,7 +115,7 @@ namespace youkatei
             sampCommands.Add("inf2", "Infernus");
             sampCommands.Add("sho", "Shotaro");
 
-            foreach (KeyValuePair<string,string> command in sampCommands)
+            foreach (KeyValuePair<string, string> command in sampCommands)
             {
                 RegisterCommand(command.Key, new Action<int, List<object>, string>(async (source, args, raw) =>
                 {
