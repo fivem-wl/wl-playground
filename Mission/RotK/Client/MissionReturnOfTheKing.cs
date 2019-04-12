@@ -252,9 +252,8 @@ namespace Client
                 Tick -= missionObjective.HookOnTick_AccomplishCheckAsync;
                 Tick -= missionObjective.HookOnTick_AccomplishSubObjectiveCheckAsync;
                 Tick -= missionObjective.HookOnTick_DrawOnEveryFrameAsync;
-
-
-                if (isLastObjective) SetPlayerWantedLevel(Game.Player.Handle, 0, false);
+                
+                // hint on first mission
                 if (isFirstObjective) PlaySoundFrontend(GetSoundId(), "5s", "MP_MISSION_COUNTDOWN_SOUNDSET", false);
             };
 
@@ -266,7 +265,7 @@ namespace Client
 
 
             MissionReturnOfTheKing.OnMissionSchedule += HintOnMissionSchedule;
-
+            
             MissionReturnOfTheKing.OnMissionStop += HintOnMissionFinish;
             MissionReturnOfTheKing.OnMissionStop += RescheduleWhenMissionStop;
 
@@ -310,7 +309,12 @@ namespace Client
                 SetNotificationMessage("CHAR_LJT", "CHAR_LJT", false, 2, "???", "王者归来");
                 DrawNotification(false, true);
                 PlaySoundFrontend(GetSoundId(), "BASE_JUMP_PASSED", "HUD_AWARDS", false);
+
+                // ClearWantedLevelOnMissionFinish
+                SetPlayerWantedLevel(Game.Player.Handle, 0, false);
+                SetPlayerWantedLevelNow(Game.Player.Handle, false);
             }
+
         }
 
         private void RescheduleWhenMissionStop(string reason)

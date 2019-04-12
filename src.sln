@@ -21,6 +21,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Freeroam", "Freeroam", "{AE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Freeroam\Client\Client.csproj", "{19B7FF10-22FF-4D4C-9D3D-35E97313D667}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "youkatei", "youkatei\youkatei.csproj", "{5931E2C1-8E93-4A55-9CA3-547B57B68704}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{011A0082-0599-42A6-8472-B4B15DBCF83C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client", "client", "{97C6876C-EA1A-4649-9E5A-ECF40C1F9722}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shared", "shared", "{71569242-6268-4E47-A8C8-D5DFA97814A5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "server", "server", "{FE3580A3-1109-4145-8537-3E2856826EE7}"
+	ProjectSection(SolutionItems) = preProject
+		lib\server\libSQLite.Interop.so = lib\server\libSQLite.Interop.so
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Shared\Client\Client.projitems*{19b7ff10-22ff-4d4c-9d3d-35e97313d667}*SharedItemsImports = 4
@@ -47,6 +60,10 @@ Global
 		{19B7FF10-22FF-4D4C-9D3D-35E97313D667}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19B7FF10-22FF-4D4C-9D3D-35E97313D667}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19B7FF10-22FF-4D4C-9D3D-35E97313D667}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5931E2C1-8E93-4A55-9CA3-547B57B68704}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5931E2C1-8E93-4A55-9CA3-547B57B68704}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5931E2C1-8E93-4A55-9CA3-547B57B68704}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5931E2C1-8E93-4A55-9CA3-547B57B68704}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,6 +75,9 @@ Global
 		{98B69224-2E49-46B9-8960-CD3F49A197AA} = {C93028CC-679C-4904-B578-F0C88EE06453}
 		{5E7D6CFE-8610-4269-B319-525FCA971683} = {C93028CC-679C-4904-B578-F0C88EE06453}
 		{19B7FF10-22FF-4D4C-9D3D-35E97313D667} = {AEA4FADD-852E-42F3-BA8D-508620B7149B}
+		{97C6876C-EA1A-4649-9E5A-ECF40C1F9722} = {011A0082-0599-42A6-8472-B4B15DBCF83C}
+		{71569242-6268-4E47-A8C8-D5DFA97814A5} = {011A0082-0599-42A6-8472-B4B15DBCF83C}
+		{FE3580A3-1109-4145-8537-3E2856826EE7} = {011A0082-0599-42A6-8472-B4B15DBCF83C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E57DC6A7-7A2E-461C-830F-8C6603A19487}
