@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.539
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mission", "Mission", "{5D5A822B-AF58-42A1-8E81-D50C819AD7AA}"
 EndProject
@@ -21,8 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Freeroam", "Freeroam", "{AE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Freeroam\Client\Client.csproj", "{19B7FF10-22FF-4D4C-9D3D-35E97313D667}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "youkatei", "youkatei\youkatei.csproj", "{5931E2C1-8E93-4A55-9CA3-547B57B68704}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{011A0082-0599-42A6-8472-B4B15DBCF83C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client", "client", "{97C6876C-EA1A-4649-9E5A-ECF40C1F9722}"
@@ -33,6 +31,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "server", "server", "{FE3580
 	ProjectSection(SolutionItems) = preProject
 		lib\server\libSQLite.Interop.so = lib\server\libSQLite.Interop.so
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Utilities\Client\Client.csproj", "{DA1DD5FA-6DA5-43E3-9CBA-C4035A0ED41F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Utilities\Server\Server.csproj", "{13CD6CE4-26AA-417B-AA9A-E9850C54277D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{57D94740-68E2-4C99-9B10-1B56447E663D}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -60,10 +64,14 @@ Global
 		{19B7FF10-22FF-4D4C-9D3D-35E97313D667}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19B7FF10-22FF-4D4C-9D3D-35E97313D667}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19B7FF10-22FF-4D4C-9D3D-35E97313D667}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5931E2C1-8E93-4A55-9CA3-547B57B68704}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5931E2C1-8E93-4A55-9CA3-547B57B68704}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5931E2C1-8E93-4A55-9CA3-547B57B68704}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5931E2C1-8E93-4A55-9CA3-547B57B68704}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA1DD5FA-6DA5-43E3-9CBA-C4035A0ED41F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA1DD5FA-6DA5-43E3-9CBA-C4035A0ED41F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA1DD5FA-6DA5-43E3-9CBA-C4035A0ED41F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA1DD5FA-6DA5-43E3-9CBA-C4035A0ED41F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13CD6CE4-26AA-417B-AA9A-E9850C54277D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13CD6CE4-26AA-417B-AA9A-E9850C54277D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13CD6CE4-26AA-417B-AA9A-E9850C54277D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13CD6CE4-26AA-417B-AA9A-E9850C54277D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,6 +86,8 @@ Global
 		{97C6876C-EA1A-4649-9E5A-ECF40C1F9722} = {011A0082-0599-42A6-8472-B4B15DBCF83C}
 		{71569242-6268-4E47-A8C8-D5DFA97814A5} = {011A0082-0599-42A6-8472-B4B15DBCF83C}
 		{FE3580A3-1109-4145-8537-3E2856826EE7} = {011A0082-0599-42A6-8472-B4B15DBCF83C}
+		{DA1DD5FA-6DA5-43E3-9CBA-C4035A0ED41F} = {57D94740-68E2-4C99-9B10-1B56447E663D}
+		{13CD6CE4-26AA-417B-AA9A-E9850C54277D} = {57D94740-68E2-4C99-9B10-1B56447E663D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E57DC6A7-7A2E-461C-830F-8C6603A19487}
