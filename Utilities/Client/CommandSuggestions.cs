@@ -1,5 +1,6 @@
 ﻿using System;
 using CitizenFX.Core;
+using static CitizenFX.Core.Native.API;
 
 namespace Client
 {
@@ -13,10 +14,15 @@ namespace Client
 
         private void OnClientResourceStart(string resourceName)
         {
+            if (GetCurrentResourceName() != resourceName)
+            {
+                return;
+            }
+
             // car的提示
             TriggerEvent("chat:addSuggestion", "/car", "用来出生载具", new[]
             {
-                new { name="车名", help="可在此查看 https://wiki.gt-mp.net/index.php/Vehicle_Models" }
+                new { name="车名", help="https://wiki.gt-mp.net/index.php/Vehicle_Models" }
             });
         }
     }
