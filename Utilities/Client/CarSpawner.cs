@@ -47,6 +47,9 @@ namespace Client
                 return;
             }
 
+            // 删除上辆车
+            removePreviousCar();
+
             // 创造车辆
             var vehicle = await World.CreateVehicle(model, Game.PlayerPed.Position, Game.PlayerPed.Heading);
 
@@ -56,6 +59,7 @@ namespace Client
             vehicle.NeedsToBeHotwired = false;
             vehicle.IsStolen = false;
             vehicle.IsEngineRunning = true;
+
             // 这车成为‘上一辆车’
             previousCar = vehicle;
 
@@ -65,12 +69,17 @@ namespace Client
             TriggerEvent("chat:addMessage", new
             {
                 color = new[] { 0, 128, 255 },
-                args = new[] { "[车管]", $"把你扔进了{vehicle.DisplayName}" }
+                args = new[] { "[车管]", $"把你扔进了{vehicle.LocalizedName}" }
             });
         }
 
         private void OnClientResourceStart(string resourceName)
         {
+            if (GetCurrentResourceName() != resourceName)
+            {
+                return;
+            }
+
             RegisterCommand("car", new Action<int, List<object>, string>(async (source, args, raw) =>
             {
                 // 检查输入的arg
@@ -99,9 +108,6 @@ namespace Client
                     return;
                 }
 
-                // 删除上辆车
-                removePreviousCar();
-
                 // 刷车
                 await spawnCar(model);
 
@@ -120,8 +126,6 @@ namespace Client
                 RegisterCommand(command.Key, new Action<int, List<object>, string>(async (source, args, raw) =>
                 {
                     var model = command.Value;
-                    // 删除上辆车
-                    removePreviousCar();
                     // 刷车
                     await spawnCar(model);
                 }), false);
