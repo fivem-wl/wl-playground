@@ -32,20 +32,10 @@ namespace youkatei
             }
         }
 
-        // 等待模型读取
-        private async Task waitForModelLoading(uint hash)
-        {
-            while (!HasModelLoaded(hash))
-            {
-                await Delay(0);
-            }
-        }
-
         // 刷车
         private async Task spawnCar(String model)
         {
             // 检查模型存在与否
-            // assumes the directive `using static CitizenFX.Core.Native.API;`
             var hash = (uint)GetHashKey(model);
             if (!IsModelInCdimage(hash) || !IsModelAVehicle(hash))
             {
@@ -59,14 +49,14 @@ namespace youkatei
 
             // 创造车辆
             var vehicle = await World.CreateVehicle(model, Game.PlayerPed.Position, Game.PlayerPed.Heading);
-            // 等待模型读取
-            await waitForModelLoading(hash);
 
+            // 给车辆上属性
             vehicle.PreviouslyOwnedByPlayer = true;
             vehicle.IsPersistent = true;
             vehicle.NeedsToBeHotwired = false;
             vehicle.IsStolen = false;
             vehicle.IsEngineRunning = true;
+            // 这车成为‘上一辆车’
             previousCar = vehicle;
 
             // 把玩家扔进车里
@@ -74,57 +64,40 @@ namespace youkatei
 
             TriggerEvent("chat:addMessage", new
             {
-                color = new[] { 255, 0, 0 },
+                color = new[] { 0, 128, 255 },
                 args = new[] { "[车管]", $"{vehicle.DisplayName}, ging!" }
             });
         }
 
         private void OnClientResourceStart(string resourceName)
         {
-
-            RegisterCommand("car", new Action<int, List<object>, string>(async (source, args, raw) =>
-            {
+          RegisterCommand("car", new Action<int, List<object>, string>(async (source, args, raw) =>
+                {
                 // 检查输入的arg
-                // -h == --help
                 // 没输入或者多输入了，弹错
                 var model = " ";
-                if (args.Count == 1)
-                {
-                    if (args[0].ToString() == "-h")
+                    if (args.Count == 1)
+                    {
+                        model = args[0].ToString();
+                    }
+                    else if (args.Count == 0)
                     {
                         TriggerEvent("chat:addMessage", new
                         {
                             color = new[] { 255, 0, 0 },
-                            args = new[] { "[车管帮助]", $"请输入/car %车名%" }
-                        });
-                        TriggerEvent("chat:addMessage", new
-                        {
-                            color = new[] { 255, 0, 0 },
-                            args = new[] { "[车管帮助]", $"%车名%请看 https://wiki.gt-mp.net/index.php/Vehicle_Models" }
+                            args = new[] { "[车管]", $"太北上了, 你敲的车名都是null..." }
                         });
                         return;
                     }
-
-                    model = args[0].ToString();
-                }
-                else if (args.Count == 0)
-                {
-                    TriggerEvent("chat:addMessage", new
+                    else
                     {
-                        color = new[] { 255, 0, 0 },
-                        args = new[] { "[车管]", $"太北上了, 你敲的车名都是null..." }
-                    });
-                    return;
-                }
-                else
-                {
-                    TriggerEvent("chat:addMessage", new
-                    {
-                        color = new[] { 255, 0, 0 },
-                        args = new[] { "[车管]", $"太TK了, 我只接受一个车名..." }
-                    });
-                    return;
-                }
+                        TriggerEvent("chat:addMessage", new
+                        {
+                            color = new[] { 255, 0, 0 },
+                            args = new[] { "[车管]", $"太TK了, 我只接受一个车名..." }
+                        });
+                        return;
+                    }
 
                 // 删除上辆车
                 removePreviousCar();
@@ -132,81 +105,27 @@ namespace youkatei
                 // 刷车
                 await spawnCar(model);
 
-            }), false);
+                }), false);
 
-            RegisterCommand("tur", new Action<int, List<object>, string>(async (source, args, raw) =>
+            // 怀旧的samp类型指令
+            var sampCommands = new Dictionary<string, string>();
+            sampCommands.Add("tur", "Turismo2");
+            sampCommands.Add("tur2", "Turismor");
+            sampCommands.Add("inf", "Infernus2");
+            sampCommands.Add("inf2", "Infernus");
+            sampCommands.Add("sho", "Shotaro");
+
+            foreach (KeyValuePair<string,string> command in sampCommands)
             {
-                // 检查输入的arg
-                // -h = --help
-                // 空白默认成Turismo R
-                // -sa则是sa的Turismo
-                var model = "Turismor";
-                if (args.Count == 1)
+                RegisterCommand(command.Key, new Action<int, List<object>, string>(async (source, args, raw) =>
                 {
-                    if (args[0].ToString() == "-h")
-                    {
-                        TriggerEvent("chat:addMessage", new
-                        {
-                            color = new[] { 255, 0, 0 },
-                            args = new[] { "[车管帮助]", $"请输入/tur" }
-                        });
-                        TriggerEvent("chat:addMessage", new
-                        {
-                            color = new[] { 255, 0, 0 },
-                            args = new[] { "[车管帮助]", $"/tur -sa可以出生怀旧Turismo" }
-                        });
-                        return;
-                    }
-                    else if (args[0].ToString() == "-sa")
-                    {
-                        model = "Turismo2";
-                    }
-                }
-
-                // 删除上辆车
-                removePreviousCar();
-
-                // 刷车
-                await spawnCar(model);
-
-            }), false);
-
-            RegisterCommand("inf", new Action<int, List<object>, string>(async (source, args, raw) =>
-            {
-                // 检查输入的arg
-                // -h = --help
-                // 空白默认成现代Infernus
-                // -sa则是sa的Infernus
-                var model = "Infernus";
-                if (args.Count == 1)
-                {
-                    if (args[0].ToString() == "-h")
-                    {
-                        TriggerEvent("chat:addMessage", new
-                        {
-                            color = new[] { 255, 0, 0 },
-                            args = new[] { "[车管帮助]", $"请输入/inf" }
-                        });
-                        TriggerEvent("chat:addMessage", new
-                        {
-                            color = new[] { 255, 0, 0 },
-                            args = new[] { "[车管帮助]", $"/inf -sa可以出生怀旧Infernus" }
-                        });
-                        return;
-                    }
-                    else if (args[0].ToString() == "-sa")
-                    {
-                        model = "Infernus2";
-                    }
-                }
-
-                // 删除上辆车
-                removePreviousCar();
-
-                // 刷车
-                await spawnCar(model);
-
-            }), false);
+                    var model = command.Value;
+                    // 删除上辆车
+                    removePreviousCar();
+                    // 刷车
+                    await spawnCar(model);
+                }), false);
+            }
         }
     }
 }
