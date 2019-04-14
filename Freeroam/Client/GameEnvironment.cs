@@ -70,11 +70,6 @@ namespace wlFreeroamClient
             Tick += AreaAkinaClearer.SetPedVehicleDensityToZeroEveryFrame;
             AreaAkinaClearer.ShowVisualRange();
 
-            // EventHandlers.Add("DamageEvents:PedKilledByPlayer", new Action<int, int, uint, bool>(PlayerRefillByKillPed));
-            //EventHandlers.Add("MissionMostWantedDelivery:OnPlayerMissionRunning", new Action<int, int>(HandleMissionRunningEvent));
-            //EventHandlers.Add("MissionMostWantedDelivery:OnPlayerMissionStart", new Action<int, int>(HandleMissionStartEvent));
-            //EventHandlers.Add("MissionMostWantedDelivery:OnPlayerMissionStop", new Action<int, string, int>(HandleMissionStopEvent));
-
         }
 
         // 时间
@@ -329,45 +324,6 @@ namespace wlFreeroamClient
             }
         }
         #endregion
-
-        private void HandleMissionRunningEvent(int player, int remainTime)
-        {
-            TriggerEvent("chat:addMessage", new
-            {
-                color = new[] { 255, 0, 0 },
-                args = new[]
-                {
-                    "[HandleMissionRunningEvent]",
-                    $" {player}, {remainTime}"
-                }
-            });
-        }
-
-        private void HandleMissionStartEvent(int player, int duration)
-        {
-            TriggerEvent("chat:addMessage", new
-            {
-                color = new[] { 255, 0, 0 },
-                args = new[]
-                {
-                    "[HandleMissionStartEvent]",
-                    $" {player}, {duration}"
-                }
-            });
-        }
-
-        private void HandleMissionStopEvent(int player, string reason, int reamineTime)
-        {
-            TriggerEvent("chat:addMessage", new
-            {
-                color = new[] { 255, 0, 0 },
-                args = new[]
-                {
-                    "[HandleMissionStopEvent]",
-                    $" {player}, {reason}, {reamineTime}"
-                }
-            });
-        }
 
     }
 }
