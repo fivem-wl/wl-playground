@@ -36,9 +36,7 @@ namespace Server
 
         public Main()
         {
-            Debug.WriteLine("lazy zrero init");
             Storage.Instance.Load(ref PlayerTeleportPoints);
-            Debug.WriteLine("lazy init");
 
             EventHandlers.Add("wlPlayerTeleportPoint:AddNewCommand", new Action<Player, string, Vector3, float>(AddNewCommand));
             EventHandlers.Add("wlPlayerTeleportPoint:RecordCommandUsage", 
@@ -50,22 +48,14 @@ namespace Server
 
         }
 
-        public void TestInt([FromSource] Player source, int TestInt)
-        {
-            Debug.WriteLine($"TestInt from Client to Server {TestInt} - {DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.ffff")}");
-            TriggerClientEvent("wlTest:TestInt", TestInt);
-        }
-
         /// <summary>
         /// 加载传送点到客户端 - 有则返回成功已经传送, 命令信息; 无则返回失败, null
         /// </summary>
         private void LoadTeleportPoint([FromSource] Player source, string commandName)
         {
-            Debug.WriteLine($"this should called first {DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.ffff")} - {GetGameTimer()}");
             // 检查传送命令是否存在, 有则返回成功已经传送, 命令信息; 无则返回失败, null
             if (PlayerTeleportPoints.Has(commandName))
             {
-                Debug.WriteLine($"LoadTeleportPoint - has ready to call TriggerClientEvent {DateTime.UtcNow.ToString("yyyy - MM - dd HH: mm:ss.ffff")}");
                 TriggerClientEvent(source, "wlPlayerTeleportPoint:SetTeleportPoint", commandName, true, 
                     PlayerTeleportPoints[commandName].Position,
                     PlayerTeleportPoints[commandName].Heading,
@@ -73,7 +63,6 @@ namespace Server
             }
             else
             {
-                Debug.WriteLine($"LoadTeleportPoint - not call with null {DateTime.UtcNow.ToString("yyyy - MM - dd HH: mm:ss.ffff")}");
                 TriggerClientEvent(source, "wlPlayerTeleportPoint:SetTeleportPoint", commandName, false, null);
             }
         }
@@ -96,18 +85,13 @@ namespace Server
         /// <param name="commandName"></param>
         private void AddNewCommand([FromSource] Player source, string commandName, Vector3 position, float heading)
         {
-            Debug.WriteLine($"{commandName} {GetPlayerLicenseIdentifier(source)}");
-            Debug.WriteLine("AddNewCommand 1");
             // 已有对应传送点, 则跳过添加
             if (PlayerTeleportPoints.ContainsKey(commandName)) return;
             // 写入服务期内存
-            Debug.WriteLine($"AddNewCommand 2 {commandName} - {position} - {heading} - {GetPlayerLicenseIdentifier(source)}");
             PlayerTeleportPoints[commandName] = new PlayerTeleportPoint(
                 commandName, position, heading, GetPlayerLicenseIdentifier(source));
             // 写入数据库
-            Debug.WriteLine("AddNewCommand 3");
             Storage.Instance.Save(commandName, position, heading, GetPlayerLicenseIdentifier(source));
-            Debug.WriteLine("AddNewCommand 4");
             // 写入客户端
             TriggerClientEvent(source, "wlPlayerTeleportPoint:SetTeleportPoint", commandName, true,
                     PlayerTeleportPoints[commandName].Position,

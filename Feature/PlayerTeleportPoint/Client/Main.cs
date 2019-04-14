@@ -45,23 +45,11 @@ namespace Client
                 // 等待服务端Event执行完成并返回结果
                 var now = GetGameTimer();
                 MethodExistedLastWaitTime = now;
-                Debug.WriteLine(GetGameTimer().ToString());
                 while (MethodExistedLastWaitTime == now) { await BaseScript.Delay(10); }
-                Debug.WriteLine(GetGameTimer().ToString());
 
                 var playerTeleportPoint = this.GetValueOrDefault(commandName, null);
                 
                 return (!(playerTeleportPoint is null));
-            }
-        }
-
-        public void ShowTest()
-        {
-            Debug.WriteLine($"ShowTest {this.Count}");
-            foreach (var p in this)
-            {
-                Debug.WriteLine($"ShowTest {p.Key}");
-                Debug.WriteLine($"ShowTest {p.Value.CommandName} - {p.Value.CreatorIdentifier} - {p.Value.Heading} - {p.Value.Position} - {p.Value.ToString()}");
             }
         }
 
@@ -112,9 +100,7 @@ namespace Client
         private const string ResourceDisplayName = "传送";
         
         private PlayerTeleportPoints PlayerTeleportPoints = new PlayerTeleportPoints();
-
-
-        public int TestInt = 0;
+        
 
         public Main()
         {
@@ -128,25 +114,6 @@ namespace Client
             RegisterCommand("tp", new Action<int, List<object>, string>
                 (async (source, args, raw) => await CommandGotoTeleportPoint(source, args, raw)), false);
 
-            RegisterCommand("tptest", new Action<int, List<object>, string>((source, args, raw) =>
-            {
-                PlayerTeleportPoints.ShowTest();
-            }), false);
-
-            RegisterCommand("tpint", new Action<int, List<object>, string>((source, args, raw) =>
-            {
-                Debug.WriteLine($"before trigger server - {TestInt} - {DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.ffff")}");
-                TriggerServerEvent("wlTest:TestInt", TestInt);
-                Debug.WriteLine($"after trigger server - {TestInt} - {DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.ffff")}");
-            }), false);
-
-            EventHandlers.Add("wlTest:TestInt", new Action<int>((testInt) =>
-            {
-                Debug.WriteLine($"TestInt from Server to Client {testInt} - {DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.ffff")}");
-                Debug.WriteLine($"Start +1 {TestInt} - {DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.ffff")}");
-                TestInt += 1;
-                Debug.WriteLine($"Finish +1 {TestInt} - {DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.ffff")}");
-            }));
         }
 
         // 命令: 制作传送点
