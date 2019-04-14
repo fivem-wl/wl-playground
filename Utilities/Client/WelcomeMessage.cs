@@ -22,7 +22,7 @@ namespace Client
             TriggerEvent("chat:addMessage", new
             {
                 color = new[] { 255, 255, 255 },
-                args = new[] { "[系统]", $"欢迎来到未来世界，{Game.Player.Name}" }
+                args = new[] { "[系统]", $"欢迎来到未来世界，{GetPlayerName(Game.Player.ServerId)}" }
             });
             
         }
