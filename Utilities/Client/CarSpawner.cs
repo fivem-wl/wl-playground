@@ -130,6 +130,18 @@ namespace Client
                     await spawnCar(model);
                 }), false);
             }
+
+            // car的提示
+            TriggerEvent("chat:addSuggestion", "/car", "出生载具", new[]
+            {
+                new { name="车名", help="https://wiki.gt-mp.net/index.php/Vehicle_Models" }
+            });
+            // samp类型的提示
+            TriggerEvent("chat:addSuggestion", "/tur", "出生经典Turismo");
+            TriggerEvent("chat:addSuggestion", "/tur2", "出生Turismo R");
+            TriggerEvent("chat:addSuggestion", "/inf", "出生经典Infernus");
+            TriggerEvent("chat:addSuggestion", "/inf2", "出生Infernus");
+            TriggerEvent("chat:addSuggestion", "/sho", "出生Shotaro");
         }
     }
 }
