@@ -40,7 +40,7 @@ namespace Server
 
             EventHandlers.Add("wlPlayerTeleportPoint:AddNewCommand", new Action<Player, string, Vector3, float>(AddNewCommand));
             EventHandlers.Add("wlPlayerTeleportPoint:RecordCommandUsage", 
-                new Action<Player, string>(async (source, commandName) => await RecordCommandUsageAsync(source, commandName)));
+                new Action<int, string>(async (sourceServerId, commandName) => await RecordCommandUsageAsync(sourceServerId, commandName)));
 
             EventHandlers.Add("wlPlayerTeleportPoint:LoadTeleportPoint", new Action<Player, string>(LoadTeleportPoint));
         }
@@ -97,12 +97,17 @@ namespace Server
         }
 
         // +1s
-        private async Task RecordCommandUsageAsync([FromSource] Player source, string commandName)
+        // 异步调用似乎无法正确传递[FromSource] Player source, 因此需客户端传递sourceServerId并进行处理(需要进一步仅测试确认)
+        private async Task RecordCommandUsageAsync(int sourceServerId, string commandName)
         {
+            var p = Players[sourceServerId];
+            Log.Debug($"RecordCommandUsageAsync({sourceServerId}, {commandName}) - " +
+                $"sourceLicense - {p.Handle}, Name - {p.Name}, License - {p.Identifiers["license"]}");
+            
             var playerTeleportPoint = PlayerTeleportPoints[commandName];
             Storage.Instance.CommandCountPlusOne(commandName);
             await Storage.Instance.AddNewRecordAsync(
-                GetPlayerLicenseIdentifier(source), playerTeleportPoint.CommandName, 
+                p.Identifiers["license"], playerTeleportPoint.CommandName,
                 playerTeleportPoint.Position, playerTeleportPoint.Heading,
                 playerTeleportPoint.CreatorIdentifier, DateTime.UtcNow);
         }

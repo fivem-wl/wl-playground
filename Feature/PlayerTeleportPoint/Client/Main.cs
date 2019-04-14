@@ -189,6 +189,8 @@ namespace Client
             {
                 await Teleport.TeleportToCoords(PlayerTeleportPoints[commandName].Position);
                 Game.PlayerPed.Heading = PlayerTeleportPoints[commandName].Heading;
+
+                TriggerServerEvent("wlPlayerTeleportPoint:RecordCommandUsage", Game.Player.ServerId,  commandName);
             }
             else
             {
