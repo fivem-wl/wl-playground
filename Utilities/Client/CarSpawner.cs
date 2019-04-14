@@ -131,7 +131,7 @@ namespace Client
                 }), false);
             }
 
-            // car的提示
+            // /car的提示
             TriggerEvent("chat:addSuggestion", "/car", "出生载具", new[]
             {
                 new { name="车名", help="https://wiki.gt-mp.net/index.php/Vehicle_Models" }
