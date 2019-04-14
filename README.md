@@ -13,6 +13,9 @@
  - /inf - GTA:SA Infernus
  - /tur - GTA:SA Turismor
  - /sho - Shotaro
+#### Misc
+ - /q - quit
+
 
 ### Missions
 #### Return of the King
