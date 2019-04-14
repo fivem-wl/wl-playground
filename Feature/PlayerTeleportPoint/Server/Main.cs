@@ -43,9 +43,6 @@ namespace Server
                 new Action<Player, string>(async (source, commandName) => await RecordCommandUsageAsync(source, commandName)));
 
             EventHandlers.Add("wlPlayerTeleportPoint:LoadTeleportPoint", new Action<Player, string>(LoadTeleportPoint));
-
-            EventHandlers.Add("wlTest:TestInt", new Action<Player, int>(TestInt));
-
         }
 
         /// <summary>

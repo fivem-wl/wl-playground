@@ -22,9 +22,6 @@ namespace Client
     public class PlayerTeleportPoints : Dictionary<string, PlayerTeleportPoint>
     {
 
-        public int MethodExistedLastWaitTime = 0;
-        public int MethodAddNewCommandWaitTime = 0;
-
         /// <summary>
         /// 检查命令是否存在
         /// </summary>
@@ -42,10 +39,9 @@ namespace Client
             {
                 // 执行服务端的Event
                 BaseScript.TriggerServerEvent("wlPlayerTeleportPoint:LoadTeleportPoint", commandName);
-                // 等待服务端Event执行完成并返回结果
+                // 等待服务端Event执行完成
+                await WaitForSetTeleportPoint();
                 var now = GetGameTimer();
-                MethodExistedLastWaitTime = now;
-                while (MethodExistedLastWaitTime == now) { await BaseScript.Delay(10); }
 
                 var playerTeleportPoint = this.GetValueOrDefault(commandName, null);
                 
@@ -61,12 +57,23 @@ namespace Client
             var position = Game.PlayerPed.Position;
             var heading = Game.PlayerPed.Heading;
             BaseScript.TriggerServerEvent("wlPlayerTeleportPoint:AddNewCommand", commandName, position, heading);
-            var now = GetGameTimer();
-            MethodAddNewCommandWaitTime = now;
-            while (MethodAddNewCommandWaitTime == now) { await BaseScript.Delay(10); }
+            // 等待服务端Event执行完成
+            await WaitForSetTeleportPoint();
         }
 
 
+        private int LastWaitForSetTeleportPoint = 0;
+        /// <summary>
+        /// 等待至SetTeleportPoint调用, 用于等待/确认服务端已经执行相关Event
+        /// </summary>
+        /// <param name="timeout"></param>
+        /// <returns></returns>
+        private async Task WaitForSetTeleportPoint(int timeout = 1000 * 10)
+        {
+            var now = GetGameTimer();
+            LastWaitForSetTeleportPoint = now;
+            while (now == LastWaitForSetTeleportPoint && GetGameTimer() - now < timeout) await BaseScript.Delay(100);
+        }
         /// <summary>
         /// 设置传送命令 - Trigger by TriggerServerEvent
         /// </summary>
@@ -87,9 +94,8 @@ namespace Client
             {
                 this[commandName] = null;
             }
-            // Wait mark
-            MethodExistedLastWaitTime = GetGameTimer();
-            MethodAddNewCommandWaitTime = GetGameTimer();
+            // 设置最近一次调用次Method的时间
+            LastWaitForSetTeleportPoint = GetGameTimer();
         }
 
     }
