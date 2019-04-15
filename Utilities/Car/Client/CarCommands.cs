@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
 
 namespace Client
 {
+    // 非出生载具类的载具有关的命令
     public class CarCommands : BaseScript
     {
         public CarCommands()
@@ -23,7 +23,7 @@ namespace Client
             }
 
             // 修复与清洗载具
-            RegisterCommand("fix", new Action<int, List<object>, string>( (source, args, raw) =>
+            RegisterCommand("fix", new Action<int, List<object>, string>((source, args, raw) =>
             {
                 int vehicle = GetVehiclePedIsIn(Game.PlayerPed.Handle, false);
                 SetVehicleEngineHealth(vehicle, 1000);
@@ -38,7 +38,7 @@ namespace Client
             // 漂移模式
             RegisterCommand("drift", new Action<int, List<object>, string>((source, args, raw) =>
             {
-               
+
                 int vehicle = GetVehiclePedIsIn(Game.PlayerPed.Handle, false);
 
                 if (driftMode == false)

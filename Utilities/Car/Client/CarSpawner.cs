@@ -6,6 +6,7 @@ using static CitizenFX.Core.Native.API;
 
 namespace Client
 {
+    // 出生载具有关的命令
     public class CarSpawner : BaseScript
     {
         public CarSpawner()
