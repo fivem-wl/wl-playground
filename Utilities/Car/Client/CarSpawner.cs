@@ -39,11 +39,7 @@ namespace Client
             var hash = (uint)GetHashKey(model);
             if (!IsModelInCdimage(hash) || !IsModelAVehicle(hash))
             {
-                TriggerEvent("chat:addMessage", new
-                {
-                    color = new[] { 255, 0, 0 },
-                    args = new[] { "[车管]", $"xiaogo, {model}不存在!" }
-                });
+                Notify.Alert($"xiaogo, {model}不存在!", true, false);
                 return;
             }
 
@@ -66,11 +62,7 @@ namespace Client
             // 把玩家扔进车里
             Game.PlayerPed.SetIntoVehicle(vehicle, VehicleSeat.Driver);
 
-            TriggerEvent("chat:addMessage", new
-            {
-                color = new[] { 0, 128, 255 },
-                args = new[] { "[车管]", $"把你扔进了{vehicle.LocalizedName}" }
-            });
+            Notify.Success($"把你扔进了{vehicle.LocalizedName}", false, false);
         }
 
         private void OnClientResourceStart(string resourceName)
@@ -91,20 +83,12 @@ namespace Client
                 }
                 else if (args.Count == 0)
                 {
-                    TriggerEvent("chat:addMessage", new
-                    {
-                        color = new[] { 255, 0, 0 },
-                        args = new[] { "[车管]", $"太北上了, 你敲的空的车名..." }
-                    });
+                    Notify.Alert($"太北上了, 你敲的车名是空的...", true, false);
                     return;
                 }
                 else
                 {
-                    TriggerEvent("chat:addMessage", new
-                    {
-                        color = new[] { 255, 0, 0 },
-                        args = new[] { "[车管]", $"太TK了, 我只接受一个车名..." }
-                    });
+                    Notify.Alert($"太TK了, 我只接受一个车名...", true, false);
                     return;
                 }
 

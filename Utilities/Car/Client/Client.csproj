@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="CitizenFX.Core.Client, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\CitizenFX.Core.Client.1.0.1168\lib\net45\CitizenFX.Core.Client.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -45,12 +46,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CarSpawner.cs" />
+    <Compile Include="CarCommands.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QuitCommand.cs" />
-    <Compile Include="WelcomeMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <Import Project="..\..\..\Shared\Client\Client.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
