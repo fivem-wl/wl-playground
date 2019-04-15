@@ -10,8 +10,12 @@
  - /tpmake [tpCommandName] - Make teleport point
 #### Vehicle
  - /car [carModelName] - Create vehicle by name
+ - /fix - fix and clean vehicle
+ - /drift - drift mode on and of
  - /inf - GTA:SA Infernus
  - /tur - GTA:SA Turismor
+ - /inf2 - GTA V Infernus
+ - /tur2 - GTA V Turismor
  - /sho - Shotaro
 #### Misc
  - /q - quit

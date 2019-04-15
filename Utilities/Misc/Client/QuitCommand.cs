@@ -22,21 +22,17 @@ namespace Client
 
             RegisterCommand("q", new Action<int, List<object>, string>(async (source, args, raw) =>
             {
-                TriggerEvent("chat:addMessage", new
-                {
-                    color = new[] { 255, 255, 255 },
-                    args = new[] { "[系统]", $"下次再来~" }
-                });
+                Notify.Info($"5秒后关闭游戏, 下次再来~", false, false);
 
                 // 2秒延迟
-                await BaseScript.Delay(2000);
+                await BaseScript.Delay(5000);
 
                 // 退出游戏，使用native
                 ForceSocialClubUpdate();
             }), false);
 
             // /q的提示
-            TriggerEvent("chat:addSuggestion", "/q", "2秒后退出游戏");
+            TriggerEvent("chat:addSuggestion", "/q", "5秒后退出游戏");
         }
     }
 }

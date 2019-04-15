@@ -19,12 +19,7 @@ namespace Client
                 return;
             }
 
-            TriggerEvent("chat:addMessage", new
-            {
-                color = new[] { 255, 255, 255 },
-                args = new[] { "[系统]", $"欢迎来到未来世界，{GetPlayerName(Game.Player.ServerId)}" }
-            });
-            
+            Notify.Info($"欢迎来到未来世界，{GetPlayerName(Game.Player.Handle)}", false, false);
         }
     }
 }
