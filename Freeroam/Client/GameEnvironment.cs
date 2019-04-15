@@ -10,6 +10,8 @@ using static CitizenFX.Core.UI.Screen;
 using static CitizenFX.Core.Native.API;
 using Extensions;
 
+using Client;
+
 
 namespace wlFreeroamClient
 {
@@ -55,7 +57,7 @@ namespace wlFreeroamClient
             NetworkSetFriendlyFireOption(false);
             SetCanAttackFriendly(Game.PlayerPed.Handle, false, false);
             #endregion
-
+            
             Tick += PlayerSelfEveryTick;
             Tick += NoWeaponDropsWhenDeadTick;
             Tick += SetCopCustomWeaponNAccuracyTick;
@@ -63,10 +65,10 @@ namespace wlFreeroamClient
             Tick += ModeAutoRegeneration.RegenerateAsync;
             Tick += TimeSyncer.SyncTimeAsync;
 
-            // EventHandlers.Add("DamageEvents:PedKilledByPlayer", new Action<int, int, uint, bool>(PlayerRefillByKillPed));
-            //EventHandlers.Add("MissionMostWantedDelivery:OnPlayerMissionRunning", new Action<int, int>(HandleMissionRunningEvent));
-            //EventHandlers.Add("MissionMostWantedDelivery:OnPlayerMissionStart", new Action<int, int>(HandleMissionStartEvent));
-            //EventHandlers.Add("MissionMostWantedDelivery:OnPlayerMissionStop", new Action<int, string, int>(HandleMissionStopEvent));
+            AreaAkinaClearer AreaAkinaClearer = new AreaAkinaClearer();
+            Tick += AreaAkinaClearer.FreezeDrivingPedVehicleAsync;
+            Tick += AreaAkinaClearer.SetPedVehicleDensityToZeroEveryFrame;
+            AreaAkinaClearer.ShowVisualRange();
 
         }
 
@@ -242,44 +244,86 @@ namespace wlFreeroamClient
         //}
         #endregion
 
-        private void HandleMissionRunningEvent(int player, int remainTime)
+        #region 去除秋名山区域内的Dynamic Ped, Vehicle
+        private class AreaAkinaClearer
         {
-            TriggerEvent("chat:addMessage", new
-            {
-                color = new[] { 255, 0, 0 },
-                args = new[]
-                {
-                    "[HandleMissionRunningEvent]",
-                    $" {player}, {remainTime}"
-                }
-            });
-        }
+            private Dictionary<int, bool> EntityFreezedInAreaAkina = new Dictionary<int, bool>();
+            private float Radius1 = 1300f;
+            private Vector3 Pos1 = new Vector3(-3093f, 5419f, 0);
+            private Vector3 Pos2 = new Vector3(-2495f, 6455f, 0);
+            private Vector3 Pos3 = new Vector3(-1745f, 7247f, 0);
+            private Vector3 Pos4 = new Vector3(-1229f, 7773f, 0);
 
-        private void HandleMissionStartEvent(int player, int duration)
-        {
-            TriggerEvent("chat:addMessage", new
+            public void ShowVisualRange()
             {
-                color = new[] { 255, 0, 0 },
-                args = new[]
-                {
-                    "[HandleMissionStartEvent]",
-                    $" {player}, {duration}"
-                }
-            });
-        }
+                var blip1 = World.CreateBlip(Pos1, Radius1);
+                blip1.Color = BlipColor.Yellow;
+                blip1.Alpha = 64;
+                var blip2 = World.CreateBlip(Pos2, Radius1);
+                blip2.Color = BlipColor.Yellow;
+                blip2.Alpha = 64;
+                var blip3 = World.CreateBlip(Pos3, Radius1);
+                blip3.Color = BlipColor.Yellow;
+                blip3.Alpha = 64;
+                var blip4 = World.CreateBlip(Pos4, Radius1);
+                blip4.Color = BlipColor.Yellow;
+                blip4.Alpha = 64;
+            }
 
-        private void HandleMissionStopEvent(int player, string reason, int reamineTime)
-        {
-            TriggerEvent("chat:addMessage", new
+            public async Task SetPedVehicleDensityToZeroEveryFrame()
             {
-                color = new[] { 255, 0, 0 },
-                args = new[]
+                var position = Game.PlayerPed.Position;
+                var rxr = Radius1 * Radius1;
+                if (position.DistanceToSquared2D(Pos1) <= rxr ||
+                    position.DistanceToSquared2D(Pos2) <= rxr ||
+                    position.DistanceToSquared2D(Pos3) <= rxr ||
+                    position.DistanceToSquared2D(Pos4) <= rxr)
                 {
-                    "[HandleMissionStopEvent]",
-                    $" {player}, {reason}, {reamineTime}"
+                    SetPedDensityMultiplierThisFrame(0);
+                    SetVehicleDensityMultiplierThisFrame(0);
+
+                    if (Game.Player.WantedLevel > 0)
+                    {
+                        Game.PlayerPed.Health = -100;
+                        Notify.Alert("被通缉的时候禁止进入秋名山区域!");
+                    }
+
                 }
-            });
+                await Task.FromResult(0);
+            }
+
+            public async Task FreezeDrivingPedVehicleAsync()
+            {
+                var rxr = Radius1 * Radius1;
+                foreach (var ped in World.GetAllPeds())
+                {
+                    if (ped.IsPlayer) continue;
+                    if (!EntityFreezedInAreaAkina.GetValueOrDefault(ped.Handle, false))
+                    {
+                        var position = ped.Position;
+                        if (position.DistanceToSquared2D(Pos1) <= rxr ||
+                        position.DistanceToSquared2D(Pos2) <= rxr ||
+                        position.DistanceToSquared2D(Pos3) <= rxr ||
+                        position.DistanceToSquared2D(Pos4) <= rxr)
+                        {
+                            Vehicle vehicle = null;
+                            if (ped.IsInVehicle())
+                            {
+                                vehicle = ped.LastVehicle;
+                            }
+                            var randInt = new Random().Next(15);
+                            ped.Position += 5f + (float)randInt;
+                            FreezeEntityPosition(ped.Handle, true);
+                            EntityFreezedInAreaAkina[ped.Handle] = true;
+                            if (!(vehicle is null)) vehicle.Delete();
+                        }
+                    }
+
+                }
+                await Delay(1000);
+            }
         }
+        #endregion
 
     }
 }
