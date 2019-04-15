@@ -17,7 +17,7 @@ namespace wlFreeroamClient
 {
     public static class DefaultStatus
     {
-        public const int MaxHealth = 200;
+        public const int MaxHealth = 100;
         public const int MaxArmor = 200;
     }
 
@@ -94,12 +94,12 @@ namespace wlFreeroamClient
         // 呼吸回血
         private static class ModeAutoRegeneration
         {
-            private const int TICK_INTERVAL = 250;
+            private const int TICK_INTERVAL = 1000;
             // 打断持续时间
             private const int INTERRUPT_DURATION = 1000 * 5;
             // 恢复速率 ~= (1000/REGENERATION_INTERVAL)*REGENRRATION_RATE 每秒;
-            private const int REGENERATION_INTERVAL = 250;
-            private const int REGENRRATION_RATE = 2;
+            private const int REGENERATION_INTERVAL = 1000;
+            private const int REGENRRATION_RATE = 8;
 
 
             private static float previousHealth = 0;
@@ -129,7 +129,7 @@ namespace wlFreeroamClient
                                 currentHealth + REGENRRATION_RATE <= DefaultStatus.MaxHealth ? currentHealth + REGENRRATION_RATE : DefaultStatus.MaxHealth);
                             //previousHealth = newHealth;
                             // set health
-                            playerPed.MaxHealth = DefaultStatus.MaxHealth;
+                            //playerPed.MaxHealth = DefaultStatus.MaxHealth;
                             playerPed.Health = newHealth;
                         }
                         if (currentArmor < DefaultStatus.MaxArmor)
