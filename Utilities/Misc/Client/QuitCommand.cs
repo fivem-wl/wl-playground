@@ -8,24 +8,21 @@ namespace Client
     // /q
     class QuitCommand : BaseScript
     {
-        public QuitCommand()
-        {
+        public QuitCommand() =>
             EventHandlers["onClientResourceStart"] += new Action<string>(OnClientResourceStart);
-        }
+        
 
         private void OnClientResourceStart(string resourceName)
         {
             if (GetCurrentResourceName() != resourceName)
-            {
                 return;
-            }
 
             RegisterCommand("q", new Action<int, List<object>, string>(async (source, args, raw) =>
             {
                 Notify.Info($"5秒后关闭游戏, 下次再来~", false, false);
 
                 // 2秒延迟
-                await BaseScript.Delay(5000);
+                await Delay(5000);
 
                 // 退出游戏，使用native
                 ForceSocialClubUpdate();
