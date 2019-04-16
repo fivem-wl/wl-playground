@@ -9,17 +9,39 @@ namespace Client
     // 出生载具有关的命令
     public class CarSpawner : BaseScript
     {
-        public CarSpawner()
+        private class SpawnCarCommand
         {
-            EventHandlers["onClientResourceStart"] += new Action<string>(OnClientResourceStart);
+            public string Command { get; set; }
+            public string VehicleModel { get; set; }
+            public string Description { get; set; }
+
+            public SpawnCarCommand(string command, string model, string description)
+            {
+                Command = command;
+                VehicleModel = model;
+                Description = description;
+            }
         }
 
+        // 怀旧的samp类型指令
+        private static readonly IReadOnlyList<SpawnCarCommand> SampCommands = new List<SpawnCarCommand>
+        {
+            new SpawnCarCommand("tur", "Turismo2", "出生经典Turismo"),
+            new SpawnCarCommand("tur2", "Turismor", "出生Turismo R"),
+            new SpawnCarCommand("inf", "Infernus2", "出生经典Infernus"),
+            new SpawnCarCommand("inf2", "Infernus", "出生Infernus"),
+            new SpawnCarCommand("sho", "Shotaro", "出生Shotaro")
+        };
+
         private Vehicle previousCar = null;
+
+        public CarSpawner() =>
+            EventHandlers["onClientResourceStart"] += new Action<string>(OnClientResourceStart);
 
         // 如果上一辆车还存在
         // 被玩家拥有
         // 删除
-        private void removePreviousCar()
+        private void RemovePreviousCar()
         {
             if (previousCar != null)
             {
@@ -34,7 +56,7 @@ namespace Client
         }
 
         // 刷车
-        private async Task spawnCar(String model)
+        private async Task SpawnCar(string model)
         {
             // 检查模型存在与否
             var hash = (uint)GetHashKey(model);
@@ -45,7 +67,7 @@ namespace Client
             }
 
             // 删除上辆车
-            removePreviousCar();
+            RemovePreviousCar();
 
             // 创造车辆
             var vehicle = await World.CreateVehicle(model, Game.PlayerPed.Position, Game.PlayerPed.Heading);
@@ -69,9 +91,7 @@ namespace Client
         private void OnClientResourceStart(string resourceName)
         {
             if (GetCurrentResourceName() != resourceName)
-            {
                 return;
-            }
 
             RegisterCommand("car", new Action<int, List<object>, string>(async (source, args, raw) =>
             {
@@ -86,7 +106,7 @@ namespace Client
                     case 1:
                         // 刷车
                         var model = args[0].ToString();
-                        await spawnCar(model);
+                        await SpawnCar(model);
                         break;
 
                     default:
@@ -95,37 +115,22 @@ namespace Client
                 }
             }), false);
 
-            // 怀旧的samp类型指令
-            var sampCommands = new Dictionary<string, string>
-            {
-                { "tur", "Turismo2" },
-                { "tur2", "Turismor" },
-                { "inf", "Infernus2" },
-                { "inf2", "Infernus" },
-                { "sho", "Shotaro" }
-            };
-
-            foreach (KeyValuePair<string, string> command in sampCommands)
-            {
-                RegisterCommand(command.Key, new Action<int, List<object>, string>(async (source, args, raw) =>
-                {
-                    var model = command.Value;
-                    // 刷车
-                    await spawnCar(model);
-                }), false);
-            }
-
             // /car的提示
             TriggerEvent("chat:addSuggestion", "/car", "出生载具", new[]
             {
-                new { name="车名", help="https://wiki.gt-mp.net/index.php/Vehicle_Models" }
+                new { name = "车名", help = "https://wiki.gt-mp.net/index.php/Vehicle_Models" }
             });
+
             // samp类型的提示
-            TriggerEvent("chat:addSuggestion", "/tur", "出生经典Turismo");
-            TriggerEvent("chat:addSuggestion", "/tur2", "出生Turismo R");
-            TriggerEvent("chat:addSuggestion", "/inf", "出生经典Infernus");
-            TriggerEvent("chat:addSuggestion", "/inf2", "出生Infernus");
-            TriggerEvent("chat:addSuggestion", "/sho", "出生Shotaro");
+            foreach (var cmd in SampCommands)
+            {
+                RegisterCommand(cmd.Command, new Action<int, List<object>, string>(async (source, args, raw) =>
+                {
+                    await SpawnCar(cmd.VehicleModel);
+                }), false);
+
+                TriggerEvent("chat:addSuggestion", $"/{cmd.Command}", cmd.Description);
+            }
         }
     }
 }
