@@ -168,18 +168,15 @@ namespace wlFreeroamClient
 
         private async Task NoWeaponDropsWhenDeadTick()
         {
-            foreach (var ped in World.GetAllPeds())
+            World.GetAllPeds().Select(ped => ped.Handle)
+                .Where(handle => !pedNoWeaponDropsWhenDead.GetValueOrDefault(handle, false))
+                .Where(handle => !IsEntityDead(handle))
+                .ToList().ForEach(handle =>
             {
-                var pedHandle = ped.Handle;
-                if (!pedNoWeaponDropsWhenDead.GetValueOrDefault(pedHandle, false))
-                {
-                    if (!IsEntityDead(pedHandle))
-                    {
-                        SetPedDropsWeaponsWhenDead(pedHandle, false);
-                        pedNoWeaponDropsWhenDead[pedHandle] = true;
-                    }
-                }
-            }
+                SetPedDropsWeaponsWhenDead(handle, false);
+                pedNoWeaponDropsWhenDead[handle] = true;
+            });
+
             await Delay(500);
         }
         #endregion
