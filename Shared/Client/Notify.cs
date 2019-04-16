@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 using CitizenFX.Core;
@@ -25,10 +26,8 @@ namespace Client
         public static void Custom(string message, bool blink = true, bool saveToBrief = true)
         {
             SetNotificationTextEntry("CELL_EMAIL_BCON"); // 10x ~a~
-            foreach (string s in CitizenFX.Core.UI.Screen.StringToArray(message))
-            {
-                AddTextComponentSubstringPlayerName(s);
-            }
+            CitizenFX.Core.UI.Screen.StringToArray(message)
+                .ToList().ForEach(s => AddTextComponentSubstringPlayerName(s));
             DrawNotification(blink, saveToBrief);
         }
 
@@ -89,10 +88,8 @@ namespace Client
         public static void CustomImage(string textureDict, string textureName, string message, string title, string subtitle, bool saveToBrief, int iconType = 0)
         {
             SetNotificationTextEntry("CELL_EMAIL_BCON"); // 10x ~a~
-            foreach (string s in CitizenFX.Core.UI.Screen.StringToArray(message))
-            {
-                AddTextComponentSubstringPlayerName(s);
-            }
+            CitizenFX.Core.UI.Screen.StringToArray(message)
+               .ToList().ForEach(s => AddTextComponentSubstringPlayerName(s));
             SetNotificationMessage(textureName, textureDict, false, iconType, title, subtitle);
             DrawNotification(false, saveToBrief);
         }

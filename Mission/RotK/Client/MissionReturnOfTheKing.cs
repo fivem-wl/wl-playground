@@ -289,11 +289,8 @@ namespace Client
         private void HintOnMissionSchedule(string title, string name, Vector3 position)
         {
             SetNotificationTextEntry("CELL_EMAIL_BCON");
-            foreach (string s in Screen.StringToArray(
-                "胜者为王标准差事: 在被通缉下赶往差事地点, 并占领区域"))
-            {
-                AddTextComponentSubstringPlayerName(s);
-            }
+            Screen.StringToArray("胜者为王标准差事: 在被通缉下赶往差事地点, 并占领区域")
+                .ToList().ForEach(s => AddTextComponentSubstringPlayerName(s));
             // AddTextComponentString("立即前往标记地点(限时未添加)");
             SetNotificationMessage("CHAR_LJT", "CHAR_LJT", false, 0, title, name);
             DrawNotification(false, true);
