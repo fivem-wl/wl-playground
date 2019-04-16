@@ -15,7 +15,6 @@ using Shared;
 
 namespace Server
 {
-
     public sealed class PlayerTeleportPoints : Dictionary<string, PlayerTeleportPoint>
     {
         /// <summary>
@@ -31,7 +30,6 @@ namespace Server
 
     public sealed class Main : BaseScript
     {
-
         private PlayerTeleportPoints PlayerTeleportPoints = new PlayerTeleportPoints();
 
         public Main()
@@ -40,7 +38,8 @@ namespace Server
 
             EventHandlers.Add("wlPlayerTeleportPoint:AddNewCommand", new Action<Player, string, Vector3, float>(AddNewCommand));
             EventHandlers.Add("wlPlayerTeleportPoint:RecordCommandUsage", 
-                new Action<int, string>(async (sourceServerId, commandName) => await RecordCommandUsageAsync(sourceServerId, commandName)));
+                new Action<int, string>(async (sourceServerId, commandName) => 
+                    await RecordCommandUsageAsync(sourceServerId, commandName)));
 
             EventHandlers.Add("wlPlayerTeleportPoint:LoadTeleportPoint", new Action<Player, string>(LoadTeleportPoint));
         }
@@ -83,7 +82,9 @@ namespace Server
         private void AddNewCommand([FromSource] Player source, string commandName, Vector3 position, float heading)
         {
             // 已有对应传送点, 则跳过添加
-            if (PlayerTeleportPoints.ContainsKey(commandName)) return;
+            if (PlayerTeleportPoints.ContainsKey(commandName))
+                return;
+
             // 写入服务期内存
             PlayerTeleportPoints[commandName] = new PlayerTeleportPoint(
                 commandName, position, heading, GetPlayerLicenseIdentifier(source));

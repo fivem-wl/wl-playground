@@ -65,7 +65,7 @@ namespace wlFreeroamClient
             Tick += ModeAutoRegeneration.RegenerateAsync;
             Tick += TimeSyncer.SyncTimeAsync;
 
-            AreaAkinaClearer AreaAkinaClearer = new AreaAkinaClearer();
+            var AreaAkinaClearer = new AreaAkinaClearer();
             Tick += AreaAkinaClearer.FreezeDrivingPedVehicleAsync;
             Tick += AreaAkinaClearer.SetPedVehicleDensityToZeroEveryFrame;
             AreaAkinaClearer.ShowVisualRange();
