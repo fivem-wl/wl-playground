@@ -77,34 +77,33 @@ namespace Client
             {
                 // 检查输入的arg
                 // 没输入或者多输入了，弹错
-                var model = " ";
-                if (args.Count == 1)
+                switch (args.Count)
                 {
-                    model = args[0].ToString();
-                }
-                else if (args.Count == 0)
-                {
-                    Notify.Alert($"太北上了, 你敲的车名是空的...", true, false);
-                    return;
-                }
-                else
-                {
-                    Notify.Alert($"太TK了, 我只接受一个车名...", true, false);
-                    return;
-                }
+                    case 0:
+                        Notify.Alert("太北上了, 你敲的车名是空的...", true, false);
+                        break;
 
-                // 刷车
-                await spawnCar(model);
+                    case 1:
+                        // 刷车
+                        var model = args[0].ToString();
+                        await spawnCar(model);
+                        break;
 
+                    default:
+                        Notify.Alert("太TK了, 我只接受一个车名...", true, false);
+                        break;
+                }
             }), false);
 
             // 怀旧的samp类型指令
-            var sampCommands = new Dictionary<string, string>();
-            sampCommands.Add("tur", "Turismo2");
-            sampCommands.Add("tur2", "Turismor");
-            sampCommands.Add("inf", "Infernus2");
-            sampCommands.Add("inf2", "Infernus");
-            sampCommands.Add("sho", "Shotaro");
+            var sampCommands = new Dictionary<string, string>
+            {
+                { "tur", "Turismo2" },
+                { "tur2", "Turismor" },
+                { "inf", "Infernus2" },
+                { "inf2", "Infernus" },
+                { "sho", "Shotaro" }
+            };
 
             foreach (KeyValuePair<string, string> command in sampCommands)
             {
