@@ -40,7 +40,6 @@ namespace Server
 
         public class Table
         {
-
             // 传送点表
             public class PlayerTeleportPoint
             {
@@ -183,8 +182,7 @@ namespace Server
         {
             using (var db = DbFactory.Open())
             {
-                var query = db
-                    .From<Table.PlayerTeleportPoint>();
+                var query = db.From<Table.PlayerTeleportPoint>();
                 var results = db.SelectLazy(query);
                 foreach (var p in results)
                 {

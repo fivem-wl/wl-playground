@@ -65,7 +65,7 @@ namespace wlFreeroamClient
             Tick += ModeAutoRegeneration.RegenerateAsync;
             Tick += TimeSyncer.SyncTimeAsync;
 
-            AreaAkinaClearer AreaAkinaClearer = new AreaAkinaClearer();
+            var AreaAkinaClearer = new AreaAkinaClearer();
             Tick += AreaAkinaClearer.FreezeDrivingPedVehicleAsync;
             Tick += AreaAkinaClearer.SetPedVehicleDensityToZeroEveryFrame;
             AreaAkinaClearer.ShowVisualRange();
@@ -169,7 +169,7 @@ namespace wlFreeroamClient
         private async Task NoWeaponDropsWhenDeadTick()
         {
             World.GetAllPeds().Select(ped => ped.Handle)
-                .Where(handle => !pedNoWeaponDropsWhenDead.GetValueOrDefault(handle, false))
+                .Where(handle => !pedNoWeaponDropsWhenDead.GetValueOrDefault(handle))
                 .Where(handle => !IsEntityDead(handle))
                 .ToList().ForEach(handle =>
             {
@@ -201,7 +201,7 @@ namespace wlFreeroamClient
             {
                 var pedHandle = ped.Handle;
                 if (IsPedAPlayer(pedHandle)) continue;
-                if (!copCustomWeaponNAccuracy.GetValueOrDefault(pedHandle, false))
+                if (!copCustomWeaponNAccuracy.GetValueOrDefault(pedHandle))
                 {
                     var pedType = GetPedType(pedHandle);
                     // [Player,1|Male,4|Female,5|Cop,6|Human,26|SWAT,27|Animal,28|Army,29]
@@ -295,7 +295,7 @@ namespace wlFreeroamClient
                 foreach (var ped in World.GetAllPeds())
                 {
                     if (ped.IsPlayer) continue;
-                    if (!EntityFreezedInAreaAkina.GetValueOrDefault(ped.Handle, false))
+                    if (!EntityFreezedInAreaAkina.GetValueOrDefault(ped.Handle))
                     {
                         var position = ped.Position;
                         if (position.DistanceToSquared2D(Pos1) <= rxr ||

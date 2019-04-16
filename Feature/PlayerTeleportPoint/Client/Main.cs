@@ -15,7 +15,6 @@ using Extensions;
 
 namespace Client
 {
-
     /// <summary>
     /// 传送命令列表
     /// </summary>
@@ -43,9 +42,8 @@ namespace Client
                 await WaitForSetTeleportPoint();
                 var now = GetGameTimer();
 
-                var playerTeleportPoint = this.GetValueOrDefault(commandName, null);
-                
-                return (!(playerTeleportPoint is null));
+                var playerTeleportPoint = this.GetValueOrDefault(commandName);
+                return !(playerTeleportPoint is null);
             }
         }
 
@@ -72,7 +70,8 @@ namespace Client
         {
             var now = GetGameTimer();
             LastWaitForSetTeleportPoint = now;
-            while (now == LastWaitForSetTeleportPoint && GetGameTimer() - now < timeout) await BaseScript.Delay(100);
+            while (now == LastWaitForSetTeleportPoint && GetGameTimer() - now < timeout)
+                await BaseScript.Delay(100);
         }
         /// <summary>
         /// 设置传送命令 - Trigger by TriggerServerEvent
@@ -97,17 +96,14 @@ namespace Client
             // 设置最近一次调用次Method的时间
             LastWaitForSetTeleportPoint = GetGameTimer();
         }
-
     }
 
     public class Main : BaseScript
     {
-
         private const string ResourceDisplayName = "传送";
         
         private PlayerTeleportPoints PlayerTeleportPoints = new PlayerTeleportPoints();
         
-
         public Main()
         {
             // 注册PlayerTeleportPoints - SetTeleportPoint
@@ -142,7 +138,7 @@ namespace Client
             }
             */
 
-            if ((commandName.Length > 16) || !commandName.All(c => char.IsLetterOrDigit(c)))
+            if (commandName.Length > 16 || commandName.Any(c => !char.IsLetterOrDigit(c)))
             {
                 Notify.Alert($"[{ResourceDisplayName}]名称不合法, 是否过长或者使用了特殊符号?");
                 return;
@@ -165,7 +161,6 @@ namespace Client
             {
                 Notify.Alert($"[{ResourceDisplayName}]创建失败, 与服务器的连接不稳定, 请重试");
             }
-            return;
         }
 
         // 命令: 去传送点
@@ -177,6 +172,7 @@ namespace Client
                 Notify.Alert($"[{ResourceDisplayName}]传送失败, 请输入传送点名称");
                 return;
             }
+
             if (args.Count >= 2)
             {
                 Notify.Alert($"[{ResourceDisplayName}]传送失败, 传送点名称不包含空格");
@@ -196,7 +192,6 @@ namespace Client
             {
                 Notify.Alert($"[{ResourceDisplayName}]传送失败, 是否输入了不存在的传送命令?");
             }
-
         }
 
     }

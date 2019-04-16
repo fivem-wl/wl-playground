@@ -8,19 +8,15 @@ namespace Client
     // 非出生载具类的载具有关的命令
     public class CarCommands : BaseScript
     {
-        public CarCommands()
-        {
+        public CarCommands() => 
             EventHandlers["onClientResourceStart"] += new Action<string>(OnClientResourceStart);
-        }
 
         private bool driftMode = false;
 
         private void OnClientResourceStart(string resourceName)
         {
             if (GetCurrentResourceName() != resourceName)
-            {
                 return;
-            }
 
             // 修复与清洗载具
             RegisterCommand("fix", new Action<int, List<object>, string>((source, args, raw) =>
@@ -38,22 +34,11 @@ namespace Client
             // 漂移模式
             RegisterCommand("drift", new Action<int, List<object>, string>((source, args, raw) =>
             {
-
                 int vehicle = GetVehiclePedIsIn(Game.PlayerPed.Handle, false);
 
-                if (driftMode == false)
-                {
-                    SetVehicleReduceGrip(vehicle, true);
-                    driftMode = true;
-                    Notify.Info($"拓海严肃脸", false, false);
-                }
-                else
-                {
-                    SetVehicleReduceGrip(vehicle, false);
-                    driftMode = false;
-                    Notify.Info($"拓海打工脸", false, false);
-                }
-
+                driftMode = !driftMode;
+                SetVehicleReduceGrip(vehicle, driftMode);
+                Notify.Info(driftMode ? "拓海严肃脸" : "拓海打工脸", false, false);
             }), false);
 
             // fix和drift的命令提示
