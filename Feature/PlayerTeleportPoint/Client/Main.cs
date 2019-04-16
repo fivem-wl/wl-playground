@@ -141,7 +141,7 @@ namespace Client
             }
             */
 
-            if ((commandName.Length > 16) || !commandName.All(c => char.IsLetterOrDigit(c)))
+            if (commandName.Length > 16 || commandName.Any(c => !char.IsLetterOrDigit(c)))
             {
                 Notify.Alert($"[{ResourceDisplayName}]名称不合法, 是否过长或者使用了特殊符号?");
                 return;
