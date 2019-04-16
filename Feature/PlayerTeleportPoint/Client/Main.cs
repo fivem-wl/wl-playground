@@ -43,9 +43,8 @@ namespace Client
                 await WaitForSetTeleportPoint();
                 var now = GetGameTimer();
 
-                var playerTeleportPoint = this.GetValueOrDefault(commandName, null);
-                
-                return (!(playerTeleportPoint is null));
+                var playerTeleportPoint = this.GetValueOrDefault(commandName);
+                return !(playerTeleportPoint is null);
             }
         }
 
