@@ -18,7 +18,7 @@ namespace wlFreeroamClient
     public static class DefaultStatus
     {
         public const int MaxHealth = 100;
-        public const int MaxArmor = 200;
+        public const int MaxArmor = 300;
     }
 
 
@@ -75,16 +75,16 @@ namespace wlFreeroamClient
         // 时间
         private static class TimeSyncer
         {
-            private static int MinuteClockSpeed = 1000;
+            private static int MinuteClockSpeed = 2000;
             private static int CurrentMinutes = 0;
-            private static int CurrentHours = 6;
+            private static int CurrentHours = 5;
 
             public static async Task SyncTimeAsync()
             {
                 var now = GetGameTimer();
 
                 CurrentMinutes = now / 1000 % 60;
-                CurrentHours = now / 1000 / 60 % 24;
+                CurrentHours = now / 1000 / 60 % 18 + 5; // 24
                 NetworkOverrideClockTime(CurrentHours, CurrentMinutes, 0);
 
                 await Delay(MinuteClockSpeed);
