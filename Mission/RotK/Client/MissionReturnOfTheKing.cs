@@ -173,8 +173,7 @@ namespace Client
 
         private static void StopMissionWhenPlayerDead()
         {
-            Stop("dead");
-            if (CurrentMissionObjectiveIndex != 0)
+            if (CurrentMissionObjectiveIndex >= 1)
             {
                 SetNotificationTextEntry("STRING");
                 AddTextComponentString("任务失败, 再接再厉");
@@ -182,6 +181,7 @@ namespace Client
                 DrawNotification(false, true);
                 PlaySoundFrontend(-1, "MP_Flash", "WastedSounds", true);
             }
+            Stop("dead");
         }
 
     }
