@@ -341,7 +341,7 @@ namespace Client
             AddTextComponentString($"继续~y~占领~s~警察据点 - {CaptureCount}/{CaptureRequirement}");
             DrawSubtitleTimed(1000 * 30, true);
 
-            PlaySoundFrontend(GetSoundId(), "BASE_JUMP_PASSED", "HUD_AWARDS", false);
+            PlaySoundFrontend(-1, "Boss_Message_Orange", "GTAO_Boss_Goons_FM_Soundset", false);
         }
 
         public override void DrawOnEveryFrame()

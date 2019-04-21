@@ -226,7 +226,7 @@ namespace Client
              //   }),
         };
 
-        private static int ScheduleInterval { get; } = 1000 * 60 * 8;
+        private static int ScheduleInterval { get; } = 1000 * 60 * 10;
         private static int LastScheduleTime { get; set; } = GetGameTimer();
         private static bool IsReachScheduleInterval
         {
@@ -246,6 +246,15 @@ namespace Client
                 Tick += missionObjective.HookOnTick_AccomplishCheckAsync;
                 Tick += missionObjective.HookOnTick_AccomplishSubObjectiveCheckAsync;
                 Tick += missionObjective.HookOnTick_DrawOnEveryFrameAsync;
+
+                if (objectiveIndex == 1)
+                {
+                    PlaySoundFrontend(-1, "5s", "MP_MISSION_COUNTDOWN_SOUNDSET", false);
+                }
+                else if (objectiveIndex >= 2)
+                {
+                    PlaySoundFrontend(-1, "Mission_Pass_Notify", "DLC_HEISTS_GENERAL_FRONTEND_SOUNDS", true);
+                }
             };
 
             MissionReturnOfTheKing.OnMissionObjectiveStop += (
@@ -256,14 +265,14 @@ namespace Client
                 Tick -= missionObjective.HookOnTick_DrawOnEveryFrameAsync;
                 
                 // hint on first mission
-                if (isFirstObjective) PlaySoundFrontend(GetSoundId(), "5s", "MP_MISSION_COUNTDOWN_SOUNDSET", false);
+                // if (isFirstObjective) PlaySoundFrontend(GetSoundId(), "5s", "MP_MISSION_COUNTDOWN_SOUNDSET", false);
             };
 
-            MissionReturnOfTheKing.OnMissionObjectiveStop += (
-                MissionObjective missionObjective, int objectiveIndex, bool isFirstObjective, bool isLastObjective, string reason) =>
-            {
-                PlaySoundFrontend(GetSoundId(), "BASE_JUMP_PASSED", "HUD_AWARDS", false);
-            };
+            //MissionReturnOfTheKing.OnMissionObjectiveStop += (
+            //    MissionObjective missionObjective, int objectiveIndex, bool isFirstObjective, bool isLastObjective, string reason) =>
+            //{
+            //    PlaySoundFrontend(GetSoundId(), "BASE_JUMP_PASSED", "HUD_AWARDS", false);
+            //};
 
 
             MissionReturnOfTheKing.OnMissionSchedule += HintOnMissionSchedule;
@@ -296,7 +305,7 @@ namespace Client
             // AddTextComponentString("立即前往标记地点(限时未添加)");
             SetNotificationMessage("CHAR_LJT", "CHAR_LJT", false, 0, title, name);
             DrawNotification(false, true);
-            PlaySoundFrontend(GetSoundId(), "BASE_JUMP_PASSED", "HUD_AWARDS", false);
+            PlaySoundFrontend(-1, "Boss_Message_Orange", "GTAO_Boss_Goons_FM_Soundset", false);
         }
 
         private void HintOnMissionFinish(string reason)
@@ -334,19 +343,30 @@ namespace Client
 
         private int PlayerConnectedTime { get; } = GetGameTimer();
         private bool IsFastSchedule { get; set; } = true;
-        private bool IsFirstTimeCalled { get; set; } = true;
+        //private bool IsFirstTimeCalled { get; set; } = true;
         private async Task ScheduleMissionAsync()
         {
-            // 延迟第一次调用
-            if (IsFirstTimeCalled)
-            {
-                IsFirstTimeCalled = false;
-                await Delay(1000 * 30);
-                return;
-            }
-            if (IsFastSchedule || IsReachScheduleInterval)
+            //// 延迟第一次调用
+            //if (IsFirstTimeCalled)
+            //{
+            //    IsFirstTimeCalled = false;
+            //    await Delay(1000 * 60);
+            //    return;
+            //}
+            if (IsFastSchedule)
             {
                 IsFastSchedule = false;
+                await Delay(1000 * 60);
+                if (!MissionReturnOfTheKing.IsScheduled && !MissionReturnOfTheKing.IsRunning)
+                {
+                    var missionInfo = GetMissionInfoSynced();
+                    MissionReturnOfTheKing.MissionInfo = missionInfo;
+                    MissionReturnOfTheKing.Schedule();
+                }
+                return;
+            }
+            else if (IsReachScheduleInterval)
+            {
                 if (!MissionReturnOfTheKing.IsScheduled && !MissionReturnOfTheKing.IsRunning)
                 {
                     var missionInfo = GetMissionInfoSynced();
@@ -354,8 +374,7 @@ namespace Client
                     MissionReturnOfTheKing.Schedule();
                 }
             }
-
-            await Delay(1000 * 30);
+            await Delay(1000 * 60);
         }
 
 
