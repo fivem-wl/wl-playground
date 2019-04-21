@@ -174,12 +174,14 @@ namespace Client
         private static void StopMissionWhenPlayerDead()
         {
             Stop("dead");
-
-            SetNotificationTextEntry("STRING");
-            AddTextComponentString("任务失败, 再接再厉");
-            SetNotificationMessage("CHAR_LJT", "CHAR_LJT", false, 2, "???", "王者归来");
-            DrawNotification(false, true);
-            PlaySoundFrontend(GetSoundId(), "BASE_JUMP_PASSED", "HUD_AWARDS", false);
+            if (CurrentMissionObjectiveIndex != 0)
+            {
+                SetNotificationTextEntry("STRING");
+                AddTextComponentString("任务失败, 再接再厉");
+                SetNotificationMessage("CHAR_LJT", "CHAR_LJT", false, 2, "???", "王者归来");
+                DrawNotification(false, true);
+                PlaySoundFrontend(-1, "MP_Flash", "WastedSounds", true);
+            }
         }
 
     }
